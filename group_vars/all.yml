@@ -1,4 +1,9 @@
 ---
+seed:
+  rhel:
+    url: https://github.com/craig-br/portal_experience_demo
+    dir: /tmp/portal_experience_demo
+    version: feature-rhel-aa
 seed_network_cac_url: https://github.com/Spredzy/seed_network_cac
 seed_network_cac_dir: /tmp/seed_network_cac
 
