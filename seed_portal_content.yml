@@ -1,69 +1,38 @@
 ---
-- name: Seeding Red Hat Automation Applications
+- name: Seeding Red Hat Ansible Portal content
   hosts: localhost
   gather_facts: false
-  tasks:
 
+  tasks:
     - name: Perform pre-run checks
       ansible.builtin.include_tasks:
         file: ./pre_run_validation.yml
 
-    # - name: Include vars
-    #   ansible.builtin.include_vars:
-    #     dir: '{{ seed_network_cac_dir }}'
-    #     extensions:
-    #       - yml
-    #       - yaml
-    #     ignore_unknown_extensions: true
+    - name: Filter valid usecases from the list
+      ansible.builtin.set_fact:
+        selected_usecases: "{{ usecases | selectattr('name', 'in', seed_usecase) | list }}"
+
+    - name: Create temp dir
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: build
+      register: __tmp_dir
 
     - name: Load experience content
-      when: seed_usecase is search('rhel')
       block:
-        - name: Create temp dir
-          ansible.builtin.tempfile:
-            state: directory
-            suffix: build
-          register: tmp_dir
-
-        - name: debug
-          ansible.builtin.debug:
-            var: automation_templates
-
         - name: Get supported Automation Application
           ansible.builtin.git:
-            repo: "{{ automation_templates[seed_usecase]['url'] }}"
-            dest: '{{ tmp_dir.path }}/{{ automation_templates[seed_usecase]["url"].split("/")[-1] }}'
-            version: "{{ automation_templates[seed_usecase]['version'] | default('main') }}"
-
-        - name: Get all experiences in collection
-          ansible.builtin.find:
-            paths: "{{ tmp_dir.path }}/{{ automation_templates[seed_usecase]['url'].split('/')[-1] }}"
-            patterns: setup.yml
-            recurse: true
-          register: experiences
-
-        - name: Load experiences
-          ansible.builtin.include_tasks: load_experience.yml
-          when: experience is search(seed_usecase)
-          loop: '{{ experiences.files }}'
+            repo: "{{ usecase['url'] }}"
+            dest: '{{ __tmp_dir.path }}/{{ usecase["url"].split("/")[-1] }}'
+            version: "{{ usecase['version'] | default('main') }}"
+          loop: "{{ selected_usecases }}"
           loop_control:
-            loop_var: experience
+            label: "{{ usecase }}"
+            loop_var: usecase
 
-    - block:
-        - name: Create temp dir
-          ansible.builtin.tempfile:
-            state: directory
-            suffix: build
-          register: tmp_dir
-
-        - name: Get use-case-2 supported Automation Application
-          ansible.builtin.git:
-            repo: '{{ seed_usecase2_url }}'
-            dest: '{{ tmp_dir.path}}/{{ seed_usecase2_url.split("/")[-1] }}'
-
-        - name: Get all experiences in collection
+        - name: Get all usecase setup.yml files
           ansible.builtin.find:
-            paths: '{{ tmp_dir.path }}/{{ seed_usecase2_url.split("/")[-1] }}'
+            paths: "{{ __tmp_dir.path }}"
             patterns: setup.yml
             recurse: true
           register: experiences
@@ -73,57 +42,3 @@
           loop: '{{ experiences.files }}'
           loop_control:
             loop_var: experience
-      when: "'use-case-2' is in seed_usecase | default([])"
-
-    - block:
-        - name: Create temp dir
-          ansible.builtin.tempfile:
-            state: directory
-            suffix: build
-          register: tmp_dir
-
-        - name: Get use-case-3 supported Automation Application
-          ansible.builtin.git:
-            repo: '{{ seed_usecase3_url }}'
-            dest: '{{ tmp_dir.path}}/{{ seed_usecase3_url.split("/")[-1] }}'
-
-        - name: Get all experiences in collection
-          ansible.builtin.find:
-            paths: '{{ tmp_dir.path }}/{{ seed_usecase3_url.split("/")[-1] }}'
-            patterns: setup.yml
-            recurse: true
-          register: experiences
-
-        - name: Load experiences
-          ansible.builtin.include_tasks: load_experience.yml
-          loop: '{{ experiences.files }}'
-          loop_control:
-            loop_var: experience
-
-      when: "'use-case-3' is in seed_usecase | default([])"
-
-    - block:
-        - name: Create temp dir
-          ansible.builtin.tempfile:
-            state: directory
-            suffix: build
-          register: tmp_dir
-
-        - name: Get use-case-4 supported Automation Application
-          ansible.builtin.git:
-            repo: '{{ seed_usecase4_url }}'
-            dest: '{{ tmp_dir.path}}/{{ seed_usecase4_url.split("/")[-1] }}'
-
-        - name: Get all experiences in collection
-          ansible.builtin.find:
-            paths: '{{ tmp_dir.path }}/{{ seed_usecase4_url.split("/")[-1] }}'
-            patterns: setup.yml
-            recurse: true
-          register: experiences
-
-        - name: Load experiences
-          ansible.builtin.include_tasks: load_experience.yml
-          loop: '{{ experiences.files }}'
-          loop_control:
-            loop_var: experience
-      when: "'use-case-4' is in seed_usecase | default([])"
