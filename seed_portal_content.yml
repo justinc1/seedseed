@@ -27,7 +27,7 @@
 
         - name: debug
           ansible.builtin.debug:
-            var: automation_templates[seed_usecase]['url']
+            var: automation_templates
 
         - name: Get supported Automation Application
           ansible.builtin.git:
