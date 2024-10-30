@@ -8,6 +8,14 @@
       ansible.builtin.include_tasks:
         file: ./pre_run_validation.yml
 
+    # - name: Include vars
+    #   ansible.builtin.include_vars:
+    #     dir: '{{ seed_network_cac_dir }}'
+    #     extensions:
+    #       - yml
+    #       - yaml
+    #     ignore_unknown_extensions: true
+
     - name: Load experience content
       when:
         - seed_usecase is search('rhel')
@@ -20,19 +28,20 @@
 
         - name: Get supported Automation Application
           ansible.builtin.git:
-            repo: "{{ seed[seed_usecase]['url'] }}"
-            dest: '{{ tmp_dir.path }}/{{ seed[seed_usecase]["url"].split("/")[-1] }}'
-            version: "{{ seed[seed_usecase]['version'] | default('main') }}"
+            repo: "{{ automation_templates[seed_usecase]['url'] }}"
+            dest: '{{ tmp_dir.path }}/{{ automation_templates[seed_usecase]["url"].split("/")[-1] }}'
+            version: "{{ automation_templates[seed_usecase]['version'] | default('main') }}"
 
         - name: Get all experiences in collection
           ansible.builtin.find:
-            paths: '{{ tmp_dir.path }}/{{ seed[seed_usecase]["url"].split("/")[-1] }}'
+            paths: "{{ tmp_dir.path }}/{{ automation_templates[seed_usecase]['url'].split('/')[-1] }}"
             patterns: setup.yml
             recurse: true
           register: experiences
 
         - name: Load experiences
           ansible.builtin.include_tasks: load_experience.yml
+          when: experience is search(seed_usecase)
           loop: '{{ experiences.files }}'
           loop_control:
             loop_var: experience
