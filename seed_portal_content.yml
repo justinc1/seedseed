@@ -17,14 +17,17 @@
     #     ignore_unknown_extensions: true
 
     - name: Load experience content
-      when:
-        - seed_usecase is search('rhel')
+      when: seed_usecase is search('rhel')
       block:
         - name: Create temp dir
           ansible.builtin.tempfile:
             state: directory
             suffix: build
           register: tmp_dir
+
+        - name: debug
+          ansible.builtin.debug:
+            var: automation_templates
 
         - name: Get supported Automation Application
           ansible.builtin.git:
