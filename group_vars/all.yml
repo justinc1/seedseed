@@ -4,5 +4,5 @@ usecases:
     url: https://github.com/craig-br/portal_experience_demo
     version: feature-rhel-aa
   - name: network
-    url: https://github.com/Spredzy/experience_demo_2
-    version: main
+    url: https://github.com/rohitthakur2590/network.backup
+    version: backup_surveys_artifacts
