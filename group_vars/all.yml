@@ -4,5 +4,9 @@ usecases:
     url: https://github.com/craig-br/portal_experience_demo
     version: feature-rhel-aa
   - name: network
-    url: https://github.com/rohitthakur2590/network.backup
+    # url: https://github.com/rohitthakur2590/network.backup
+    url: https://github.com/justinc1/network.backup
     version: backup_surveys_artifacts
+
+# EE for rohitthakur2590/network.backup
+ee_registry_url: ghcr.io
