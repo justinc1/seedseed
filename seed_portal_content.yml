@@ -3,6 +3,9 @@
   hosts: localhost
   gather_facts: false
 
+  collections:
+    - awx.awx
+
   tasks:
     - name: Perform pre-run checks
       ansible.builtin.include_tasks:
