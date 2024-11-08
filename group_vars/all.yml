@@ -1,4 +1,5 @@
 ---
+controller_dependency_check: false
 usecases:
   - name: rhel
     # url: https://github.com/craig-br/portal_experience_demo
