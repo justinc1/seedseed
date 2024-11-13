@@ -5,6 +5,9 @@ usecases:
     # url: https://github.com/craig-br/portal_experience_demo
     url: https://github.com/justinc1/experience_demo
     version: feature-rhel-aa
+  - name: service
+    url: https://github.com/justinc1/experience_demo
+    version: feature-service-aae
   - name: network
     # url: https://github.com/rohitthakur2590/network.backup
     url: https://github.com/justinc1/network.backup
