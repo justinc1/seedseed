@@ -42,3 +42,4 @@
           loop: '{{ experiences.files }}'
           loop_control:
             loop_var: experience
+          # TODO this partially merges multiple setup.yml into a single one

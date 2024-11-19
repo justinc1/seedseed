@@ -13,3 +13,8 @@ dependencies:
     - ansible-builder
   system:
     - podman
+additional_build_steps:
+  prepend_base:
+    - RUN whoami
+    - RUN ansible --version
+    - RUN ansible-galaxy --version
