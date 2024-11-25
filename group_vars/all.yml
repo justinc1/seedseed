@@ -11,6 +11,9 @@ usecases:
   - name: network
     url: https://github.com/rohitthakur2590/network.backup
     version: main
+  - name: windows
+    url: https://github.com/redhat-cop/infra.windows_ops
+    version: main
 
 # EE for rohitthakur2590/network.backup
 # ee_registry_url: ghcr.io
