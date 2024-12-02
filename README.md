@@ -1,4 +1,4 @@
-# seedseed
+# ansible-pattern-loader
 
 Ansible playbooks to seed seeding content into AAP.
 Playbooks create in AAP objects needed for ansible experience -
